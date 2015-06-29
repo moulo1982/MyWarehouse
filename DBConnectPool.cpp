@@ -44,7 +44,7 @@ std::shared_ptr<PGconn> DBConnectPool::getConn()
         else
             PQfinish(conn);
     });
-    m_connPool.pop_front();
+    m_connPool.pop_front(); 
 
     m_full_cv.notify_one();
 
