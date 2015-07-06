@@ -12,6 +12,7 @@
 
 #include "io_service_pool.h"
 #include "session_interface.h"
+#include "request_respons.h"
 
 using boost::asio::ip::tcp;
 using boost::asio::socket_base;
@@ -19,10 +20,11 @@ using boost::asio::socket_base;
 class http_server
 {
 public:
-    http_server(tcp v, short port, short threadnum = 1) 
+    http_server(tcp v, short port, short threadnum, std::function < void(request&, response &) > func)
         : acceptor_(io_service_, tcp::endpoint(v, port))
         , pool_(threadnum)
         , thread_(&io_service_pool::run, std::ref(pool_))
+        , func_(func)
     {
         pool_.wait_init();
         do_accept();
@@ -41,6 +43,10 @@ public:
 
     void erase(std::shared_ptr<session> p);
 
+    void invoke(request &request_, response &response_)
+    {
+        func_(request_, response_);
+    }
 private:
 
     void do_accept();
@@ -55,6 +61,8 @@ private:
     std::thread thread_;
 
     std::mutex m_mutex;
+
+    std::function < void(request&, response &) > func_;
 };
 
 #endif
