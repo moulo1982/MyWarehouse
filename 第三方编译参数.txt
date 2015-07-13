@@ -1,0 +1,5 @@
+boost:
+./b2 install link=static runtime-link=static threading=multi --build-dir=./debug --libdir=/usr/local/lib/debug variant=debug
+./b2 install link=static runtime-link=static threading=multi --build-dir=./release
+
+jsoncpp:
