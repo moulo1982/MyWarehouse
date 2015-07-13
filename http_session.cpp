@@ -152,8 +152,8 @@ void http_session::onRead(const boost::system::error_code &ec, std::size_t lengt
 {
     if (!ec)
     {
+        http_parser_execute(&parser_, &parser_settings_, data_ + pos_, length);
         pos_ += length;
-        http_parser_execute(&parser_, &parser_settings_, data_, length);
 
         //如果还没有处理报文，缓冲区就满了，那么我们认为是非法，直接断开连接。
         if (!process_)

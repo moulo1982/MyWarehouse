@@ -60,9 +60,9 @@ private:
     response response_;
 
     
-    bool was_header_value_;
+    /*bool was_header_value_;
     std::string last_header_field_;
-    std::string last_header_value_;
+    std::string last_header_value_;*/
     
 };
 
