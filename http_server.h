@@ -5,11 +5,11 @@
 #include <memory>
 #include <unordered_set>
 #include <thread>
+#include <vector>
 #include <condition_variable>
+#include <assert.h>
 
-#include <boost/circular_buffer.hpp>
 #include <boost/asio.hpp>
-
 #include "io_service_pool.h"
 #include "session_interface.h"
 #include "request_respons.h"
@@ -20,12 +20,13 @@ using boost::asio::socket_base;
 class http_server
 {
 public:
-    http_server(tcp v, short port, short threadnum, std::function < void(request&, response &) > func)
+    http_server(tcp v, unsigned short port, short threadnum, std::function < bool(boost::asio::io_service&, request&, response &) > func)
         : acceptor_(io_service_, tcp::endpoint(v, port))
         , pool_(threadnum)
         , thread_(&io_service_pool::run, std::ref(pool_))
         , func_(func)
     {
+        assert(threadnum > 0);
         pool_.wait_init();
         do_accept();
     }
@@ -36,21 +37,31 @@ public:
         thread_.join();
     }
 
-    void run()
+    void run();
+
+    void erase(std::shared_ptr<session> p)
     {
-        io_service_.run();
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto it = session_.find(p);
+        if (it != session_.end())
+            session_.erase(it);
     }
 
-    void erase(std::shared_ptr<session> p);
-
-    void invoke(request &request_, response &response_)
+    bool invoke(request &request_, response &response_)
     {
-        func_(request_, response_);
+        return func_(io_service_, request_, response_);
     }
 private:
 
     void do_accept();
-    void insert(std::shared_ptr<session> &p);
+    void OnAccept(std::shared_ptr<session> new_session, const boost::system::error_code &ec);
+
+    void insert(std::shared_ptr<session> &p)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto it = session_.insert(p);
+        assert(it.second == true);
+    }
 
 private:
     std::unordered_set<std::shared_ptr<session>> session_;
@@ -62,7 +73,7 @@ private:
 
     std::mutex m_mutex;
 
-    std::function < void(request&, response &) > func_;
+    std::function < bool(boost::asio::io_service&, request&, response &) > func_;
 };
 
 #endif

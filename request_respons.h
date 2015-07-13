@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include <iosfwd>
+#include <sstream>
 #include "http_parser.h"
 #include <json/json.h>
 
@@ -126,7 +126,7 @@ private:
     request()
         : url_()
         , headers_()
-        , body_("")
+        , body_(nullptr)
         , len_(0)
     {
     }
@@ -157,21 +157,24 @@ public:
         return false;
     }
 
-    const std::string& get_body(void)
+    char* get_body(void)
     {
         return body_;
+    }
+
+    size_t get_body_len(void)
+    {
+        return len_;
     }
 
 private:
     url_obj url_;
     std::map<std::string, std::string, ci_less> headers_;
-    std::string body_;
+    char* body_;
     //std::vector<char> body_;
-    unsigned int len_;
+    size_t len_;
     std::string default_value_;
 };
-
-
 
 class response
 {
@@ -182,7 +185,7 @@ private:
         : headers_()
         , status_(200)
     {
-        headers_["Content-Type"] = "text/html";
+        headers_["Content-Type"] = "text/json";
     }
 
     ~response()

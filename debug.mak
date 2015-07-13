@@ -12,16 +12,16 @@ AR := ar
 OBJCOPY := objcopy
 
 #Additional flags
-PREPROCESSOR_MACROS := DEBUG
-INCLUDE_DIRS := /usr/pgsql-9.4/include
+PREPROCESSOR_MACROS := DEBUG BOOST_ASIO_ENABLE_HANDLER_TRACKING
+INCLUDE_DIRS := . http_parser
 LIBRARY_DIRS := 
 LIBRARY_NAMES := pthread tcmalloc_minimal
-ADDITIONAL_LINKER_INPUTS := /usr/pgsql-9.4/lib/libpq.a /usr/local/lib/libboost_system.a /usr/local/lib/libboost_thread.a /data/jsoncpp/build/debug/libjsoncpp.a
+ADDITIONAL_LINKER_INPUTS := /usr/local/lib/debug/libboost_system.a /usr/local/lib/debug/libboost_thread.a /data/jsoncpp/build/debug/libjsoncpp.a
 MACOS_FRAMEWORKS := 
 LINUX_PACKAGES := 
 
 CFLAGS := -ggdb -ffunction-sections -O0
-CXXFLAGS := -ggdb -ffunction-sections -std=c++11 -O0
+CXXFLAGS := -ggdb -ffunction-sections -std=gnu++11 -O0
 ASFLAGS := 
 LDFLAGS := -Wl,-gc-sections
 COMMONFLAGS := 

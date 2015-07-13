@@ -41,7 +41,7 @@ private:
     std::vector<work_ptr> work_;
 
     /// The next io_service to use for a connection.
-    std::size_t next_io_service_;
+    std::atomic<std::size_t> next_io_service_;
 
     std::condition_variable m_init_ok;
     std::mutex m_lock;

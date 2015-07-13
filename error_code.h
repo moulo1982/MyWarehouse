@@ -1,0 +1,18 @@
+#pragma once
+#include <stdint.h>
+
+enum ERROR_CODE
+{
+    SUCCEEDED = 0,
+    USER_NOT_LOGIN,
+    USER_NOT_EXIST,
+
+
+
+
+
+    JSON_PARSER_ERROR,
+    JSON_GETVALUE_EXCEPTION,
+    TEST_ERROR_CODE = 9527,
+    UNKNOWN_ERROR = INT32_MAX,
+};

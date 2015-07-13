@@ -3,7 +3,11 @@
 #include <iostream>
 #include <stdarg.h>
 //#define LOG LogWrapper::WriteLog
+#ifdef DEBUG
 #define LOG printLog
+#else
+#define LOG
+#endif
 //#define LOG
 
 void printLog(const char* format, ...);

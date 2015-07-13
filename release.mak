@@ -13,10 +13,10 @@ OBJCOPY := objcopy
 
 #Additional flags
 PREPROCESSOR_MACROS := NDEBUG RELEASE
-INCLUDE_DIRS := /usr/pgsql-9.4/include
+INCLUDE_DIRS := . http_parser
 LIBRARY_DIRS := 
-LIBRARY_NAMES := pthread
-ADDITIONAL_LINKER_INPUTS := /usr/pgsql-9.4/lib/libpq.a /usr/local/lib/libboost_system.a /usr/local/lib/libboost_thread.a /data/jsoncpp/build/release/libjsoncpp.a
+LIBRARY_NAMES := pthread tcmalloc_minimal
+ADDITIONAL_LINKER_INPUTS := /usr/local/lib/libboost_system.a /usr/local/lib/libboost_thread.a /data/jsoncpp/build/release/libjsoncpp.a
 MACOS_FRAMEWORKS := 
 LINUX_PACKAGES := 
 
