@@ -16,16 +16,13 @@ void http_session::start()
         std::cout << ec.message() << std::endl;
 #endif
 
-    /*boost::asio::socket_base::linger option_linger(true);
-    socket_->set_option(option_linger, ec);
-    if (ec)
-        std::cout << ec.message() << std::endl;*/
-
+    //两个初始化
     http_parser_init(&parser_, HTTP_REQUEST);
     parser_.data = this;
+    http_parser_settings_init(&parser_settings_);
 
-    /*
     
+    /*
     //on_url
     parser_settings_.on_url = [](http_parser* parser, const char *at, size_t len) {
         auto psession = reinterpret_cast<http_session*>(parser->data);
@@ -90,8 +87,14 @@ void http_session::start()
 
         return 0;
     };
-    */
     
+
+    //on_message_begin
+    parser_settings_.on_message_begin = [](http_parser* parser) {
+        //std::cout << "on_message_complete: "  << std::endl;
+        return 0;
+    };
+    */
     //on_body
     parser_settings_.on_body = [](http_parser* parser, const char* at, size_t len) {
         auto psession = reinterpret_cast<http_session*>(parser->data);

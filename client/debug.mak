@@ -12,16 +12,16 @@ AR := ar
 OBJCOPY := objcopy
 
 #Additional flags
-PREPROCESSOR_MACROS := DEBUG BOOST_ASIO_ENABLE_HANDLER_TRACKING
-INCLUDE_DIRS := . http_parser /data/jsoncpp/include
+PREPROCESSOR_MACROS := DEBUG
+INCLUDE_DIRS := /usr/include/libmongoc-1.0 /usr/include/libbson-1.0 /root/mongo-client-install/include
 LIBRARY_DIRS := 
-LIBRARY_NAMES := pthread
-ADDITIONAL_LINKER_INPUTS := /usr/local/lib/debug/libboost_system.a /usr/local/lib/debug/libboost_thread.a /data/jsoncpp/build/debug/libjsoncpp.a
+LIBRARY_NAMES := pthread mongoc-1.0 bson-1.0
+ADDITIONAL_LINKER_INPUTS := /usr/local/lib/libboost_system.a /usr/local/lib/libboost_thread.a /usr/local/lib/libboost_regex.a /root/mongo-client-install/lib/libmongoclient.a
 MACOS_FRAMEWORKS := 
 LINUX_PACKAGES := 
 
 CFLAGS := -ggdb -ffunction-sections -O0
-CXXFLAGS := -ggdb -ffunction-sections -std=gnu++11 -O0
+CXXFLAGS := -ggdb -ffunction-sections -std=c++11 -O0
 ASFLAGS := 
 LDFLAGS := -Wl,-gc-sections
 COMMONFLAGS := 

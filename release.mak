@@ -13,9 +13,9 @@ OBJCOPY := objcopy
 
 #Additional flags
 PREPROCESSOR_MACROS := NDEBUG RELEASE
-INCLUDE_DIRS := . http_parser
+INCLUDE_DIRS := . http_parser /data/jsoncpp/include
 LIBRARY_DIRS := 
-LIBRARY_NAMES := pthread tcmalloc_minimal
+LIBRARY_NAMES := pthread
 ADDITIONAL_LINKER_INPUTS := /usr/local/lib/libboost_system.a /usr/local/lib/libboost_thread.a /data/jsoncpp/build/release/libjsoncpp.a
 MACOS_FRAMEWORKS := 
 LINUX_PACKAGES := 

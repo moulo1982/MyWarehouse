@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include "boost/asio.hpp"
 #include "http_parser.h"
 #include "session_interface.h"
 #include "http_server.h"

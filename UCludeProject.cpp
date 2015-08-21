@@ -25,7 +25,8 @@ int main(int argc, char* argv[])
     }
 
     std::shared_ptr<client_manager> cm(new client_manager);
-    http_server s(boost::asio::ip::tcp::v4(), 8080, get_nprocs() * 2, [&cm](boost::asio::io_service &io_, request &request_, response &response_)->bool
+    http_server s(boost::asio::ip::tcp::v4(), 8080, get_nprocs() * 2, 
+        [&cm](boost::asio::io_service &io_, request &request_, response &response_)->bool
     {
         return cm->do_some(io_, request_, response_);
     });

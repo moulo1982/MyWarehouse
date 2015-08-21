@@ -22,12 +22,22 @@
  * IN THE SOFTWARE.
  */
 #include "http_parser.h"
+#include "public_define.h"
 #include <assert.h>
 #include <stddef.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+
+
+#ifdef __GNUC__
+# define LIKELY(X) __builtin_expect(!!(X), 1)
+# define UNLIKELY(X) __builtin_expect(!!(X), 0)
+#else
+# define LIKELY(X) (X)
+# define UNLIKELY(X) (X)
+#endif
 
 #ifndef ULLONG_MAX
 # define ULLONG_MAX ((uint64_t) -1) /* 2^64-1 */
@@ -65,15 +75,6 @@ do {                                                                 \
 } while (0);
 #define REEXECUTE()                                                  \
   goto reexecute;                                                    \
-
-
-#ifdef __GNUC__
-# define LIKELY(X) __builtin_expect(!!(X), 1)
-# define UNLIKELY(X) __builtin_expect(!!(X), 0)
-#else
-# define LIKELY(X) (X)
-# define UNLIKELY(X) (X)
-#endif
 
 
 /* Run the notify callback FOR, returning ER if it fails */
@@ -978,7 +979,25 @@ reexecute:
         }
         UPDATE_STATE(s_req_method);
 
-        CALLBACK_NOTIFY(message_begin);
+        //CALLBACK_NOTIFY(message_begin);
+        do {                                                                 
+                assert(HTTP_PARSER_ERRNO(parser) == HPE_OK);                       
+                                                                     
+                if ((settings->on_message_begin)) {      
+
+                    parser->state = CURRENT_STATE();                                 
+                    if ((0 != settings->on_message_begin(parser))) {
+                        SET_ERRNO(HPE_CB_message_begin);                                       
+                    } 
+
+                    UPDATE_STATE(parser->state);                                     
+                                                                     
+                    /* We either errored above or got paused; get out */             
+                    if ((HTTP_PARSER_ERRNO(parser) != HPE_OK)) {             
+                        return (p - data + 1);                                                   
+                    }                                                                
+                }                                                                  
+        } while (0);
 
         break;
       }
